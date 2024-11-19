@@ -8,9 +8,11 @@ public class Sol04 {
 		System.out.print("문자열을 입력하세요:");
 		String scanner_str = scanner.nextLine();
 		for(int i = 0; i < scanner_str.length(); i++) {
-			System.out.println(scanner_str.charAt(i));
+			for(int j = 0; j <= i; j++) {
+				System.out.print(scanner_str.charAt(j));				
+			}
+			System.out.println();
 		}
-
 		scanner.close();
 	}
 }

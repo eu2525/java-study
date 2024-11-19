@@ -4,20 +4,20 @@ public class Sol05 {
 	public static void main(String[] args) {
 		
 		for(int i = 1; i <= 100; i++) {
-			// 문자열로 치환 후 길이 구해서 한 자리씩 구함
 			String number = String.valueOf(i);
+			int cnt = 0;
+			for(int j = 0; j <number.length(); j++) {
+				if(number.charAt(j) == '3' || number.charAt(j) == '6' || number.charAt(j) == '9')
+					cnt += 1;
+			}
 			
-			System.out.println(number.length());
-			// 얘는 \n 없이 같은 line에 출력하려면 print \n 하려면 println
-			System.out.print(i);
-			System.out.print(" ");
+			if (cnt != 0){
+				System.out.print(number + " ");
+				for(int k = 0; k < cnt; k++) {
+					System.out.print("짝");
+				}
+				System.out.println();
+			}
 		}
-		
-		char c = '6';
-		
-		if(c == '6') {
-			System.out.println("진짜다");
-		}
-			
 	}
 }
