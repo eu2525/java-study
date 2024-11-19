@@ -6,4 +6,18 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>practice01</artifactId>
+  
+  <properties>
+  	<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+  	<maven.compiler.source>21</maven.compiler.source>
+  	<maven.compiler.target>21</maven.compiler.target>
+  </properties>
+  
+  <dependencies>
+  </dependencies>
+  
+  <build>
+	<finalName>practice01</finalName>  	
+  </build>
+  
 </project>
