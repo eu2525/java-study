@@ -1,6 +1,8 @@
-package paint;
+package com.pocodx.paint.point;
 
-public class Point {
+import com.pocodx.paint.i.Drawable;
+
+public class Point implements Drawable{
 	private int x;
 	private int y;
 	
@@ -10,6 +12,7 @@ public class Point {
 	}
 	
 	public Point() {
+		
 	}
 	
 	public int getX() {
@@ -39,6 +42,11 @@ public class Point {
 		else {
 			System.out.println("Point[x="+ x + ", y=" + y + "]를 지웠습니다.");
 		}
+	}
+
+	@Override
+	public void draw() {
+		show();
 	}
 
 	
