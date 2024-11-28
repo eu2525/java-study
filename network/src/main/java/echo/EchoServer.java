@@ -20,42 +20,11 @@ public class EchoServer {
 			serverSocket.bind(new InetSocketAddress("0.0.0.0", PORT));
 			log("starts...[port:"+ PORT + "]");
 			
-			Socket socket = serverSocket.accept(); // blocking
-
-			try {
-				InetSocketAddress inetRemoteSocketAddress = (InetSocketAddress)socket.getRemoteSocketAddress();
-				String remoteHostAddress = inetRemoteSocketAddress.getAddress().getHostAddress();
-				int remotePort = inetRemoteSocketAddress.getPort();
-				log("connected by client[" +remoteHostAddress +":" + remotePort + "]");
-				
-				// 쓰기
-				PrintWriter pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true);
-				// 읽기
-				BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
-				
-				while(true) {
-					// byte[] buffer = new byte[256];
-					// int readByteCount = is.read(buffer); //blocking
-					String data = br.readLine();
-					if(data == null){
-						log("closed by client");
-						break;
-					}				
-					log("receive: " + data);					
-					pw.println(data);
-				}
-			} catch(SocketException e){ 
-				log("socket exception" + e);
-			} catch (IOException e) {
-				log("error" + e);
-			} finally {
-				try {
-					if(socket != null && !socket.isClosed() ) {
-						socket.close();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			// accept가 1번 하고 나서 종료되므로 1번의 연결밖에 하지 못함 
+			// while True문 안에 넣어서 계속 accept이 되도록 해야 서버의 역할을 할 수 있음.
+			while(true) {
+				Socket socket = serverSocket.accept(); 
+				new EchoRequestHandler(socket).start();
 			}
 		} catch (IOException e) {
 			log("error:" + e);
