@@ -17,27 +17,43 @@ public class TCPServer {
 			// 2. 바인딩(Binding)
 			// 		    여기에 넣는 IP는 어떤 ip가 Connect를 할 수 있는지를 적는거임
 			// 		    Socket에 InetSocketAddress[InetAddress(IPAddress) + port]를 바인딩한다.
-			serverSocket.bind(new InetSocketAddress("0.0.0.0", 5000));
+			serverSocket.bind(new InetSocketAddress("0.0.0.0", 54544));
 
 			// 3. accept
 			Socket socket = serverSocket.accept(); // blocking  -> Clinet가 Connect를 할 때까지 대기 
 
-			System.out.println("연결 성공");
+			try {
+				// 반대편 소켓의 정보를 가져옴 + 다운캐스팅 진행.
+				InetSocketAddress inetRemoteSocketAddress = (InetSocketAddress)socket.getRemoteSocketAddress();
+				String remoteHostAddress = inetRemoteSocketAddress.getAddress().getHostAddress();
+				int remotePort = inetRemoteSocketAddress.getPort();
+				System.out.println("[server] connected by clinet[" +remoteHostAddress +":" + remotePort + "]");
+				
+				// 4. IO Stream 받아오기
+				InputStream is = socket.getInputStream();
+				
+				// 5. 데이터 읽기
+				byte[] buffer = new byte[256];
+				int readByteCount = is.read(buffer); //blocking
+				if(readByteCount == -1){
+					System.out.println("[server] closed by client");
+					return;
+				}
 			
-			// 4. IO Stream 받아오기
-			InputStream is = socket.getInputStream();
+				String data = new String(buffer, 0, readByteCount, "utf-8");
+				System.out.println("[server] receive: " + data);
 			
-			// 5. 데이터 읽기
-			byte[] buffer = new byte[256];
-			int readByteCount = is.read(buffer); //blocking
-			
-			if(readByteCount == -1){
-				System.out.println("[server] closed by client");
-				return;
-			} 
-			String data = new String(buffer, 0, readByteCount, "utf-8");
-			System.out.println("[server] receive: " + data);
-			
+			} catch (IOException e) {
+				System.out.println("error:" + e);
+			} finally {
+				try {
+					if(socket != null && socket.isClosed() ) {
+						socket.close();
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		} catch (IOException e) {
 			System.out.println("[server] error:" + e);
 		} finally {
@@ -48,8 +64,6 @@ public class TCPServer {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		
+		}	
 	}
-
 }
