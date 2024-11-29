@@ -47,13 +47,13 @@ private static final String SERVER_IP = "192.168.0.8";
 				
 				if ("quit".equals(input)) {
 					pw.println(input);
-					
 					// Thread가 종료될때까지 기다리는 blocking 코드를 추가
 					try {
 						chatClientThread.join();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					
 					break;
 				} else {
 					// base64로 인코딩하고
