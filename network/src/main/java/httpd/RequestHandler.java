@@ -11,6 +11,7 @@ import java.nio.file.Files;
 
 public class RequestHandler extends Thread {
 	private Socket socket;
+	private final String DOCUMENT_ROOT = "./webapp";
 	
 	public RequestHandler( Socket socket ) {
 		this.socket = socket;
@@ -55,7 +56,7 @@ public class RequestHandler extends Thread {
 			} else {
 				// methods : POST, DELETE, PUT, HEAD, CONNECT, ...
 				// SimpleHttpServer에서는 무시(400 Bad Request)
-				
+				response400Error(outputStream, tokens[2]);				
 			}
 			
 			
@@ -63,7 +64,7 @@ public class RequestHandler extends Thread {
 			// 서버 시작과 테스트를 마친 후, 주석 처리 합니다.
 //			outputStream.write("HTTP/1.1 200 OK\n".getBytes("UTF-8"));
 //			outputStream.write("Content-Type:text/html; charset=utf-8\n".getBytes("UTF-8"));
-//			outputStream.write("\n".getBytes());
+//			outputStream.write("\n".getBytes());  -> Header와 Body를 나눔.
 //			outputStream.write("<h1>이 페이지가 잘 보이면 실습과제 SimpleHttpServer를 시작할 준비가 된 것입니다.</h1>".getBytes("UTF-8"));
 
 		} catch( Exception ex ) {
@@ -81,23 +82,36 @@ public class RequestHandler extends Thread {
 		}			
 	}
 
+	private void response400Error(OutputStream outputStream, String protocol) {
+		/*
+		 HTT/1.1 404 Bad Request
+		 Content-Type: text/html; charset=utf-8\n
+		 \n
+		 body 구문.
+		 */
+		
+		
+	}
+
 	private void responseStaticResources(OutputStream os, String url, String protocol) throws IOException {
 		// default(welcome) file
 		if("/".equals(url)) {
 			url = "/index.html";
 		}
 		
-		File file = new File("./webapp" + url);
+		File file = new File(DOCUMENT_ROOT + url);
 		if(!file.exists()) {
-			file = new File("./webapp/error/404.html");
+			response404Error(os, protocol);
 			
-			byte[] body = Files.readAllBytes(file.toPath());
-			String contentType = Files.probeContentType(file.toPath());
-			
-			os.write("HTTP/1.1 404 Not Found\n".getBytes("UTF-8"));
-			os.write(("Content-Type:" + contentType + "; charset=utf-8\n").getBytes("UTF-8"));
-			os.write("\n".getBytes());
-			os.write(body);
+//			file = new File(DOCUMENT_ROOT + "/error/404.html");
+//			
+//			byte[] body = Files.readAllBytes(file.toPath());
+//			String contentType = Files.probeContentType(file.toPath());
+//			
+//			os.write("HTTP/1.1 404 Not Found\n".getBytes("UTF-8"));
+//			os.write(("Content-Type:" + contentType + "; charset=utf-8\n").getBytes("UTF-8"));
+//			os.write("\n".getBytes());
+//			os.write(body);
 	
 			return;
 		}
@@ -105,11 +119,35 @@ public class RequestHandler extends Thread {
 		byte[] body = Files.readAllBytes(file.toPath());
 		String contentType = Files.probeContentType(file.toPath());
 		
-		os.write("HTTP/1.1 200 OK\n".getBytes("UTF-8"));
+		os.write((protocol + " 200 OK\n").getBytes("UTF-8"));
 		os.write(("Content-Type:" + contentType + "; charset=utf-8\n").getBytes("UTF-8"));
 		os.write("\n".getBytes());
 		os.write(body);
 
+	}
+
+	private void response404Error(OutputStream os, String protocol) {
+		/*
+		 HTT/1.1 404 Not Found
+		 Content-Type: text/html; charset=utf-8\n
+		 \n
+		 body 구문.
+		 */
+		
+		File file = new File(DOCUMENT_ROOT + "/error/404.html");
+		byte[] body = null;
+		try {
+			body = Files.readAllBytes(file.toPath());
+			String contentType = Files.probeContentType(file.toPath());
+				
+			os.write("HTTP/1.1 404 Not Found\n".getBytes("UTF-8"));
+			os.write(("Content-Type:" + contentType + "; charset=utf-8\n").getBytes("UTF-8"));
+			os.write("\n".getBytes());
+			os.write(body);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void consoleLog( String message ) {

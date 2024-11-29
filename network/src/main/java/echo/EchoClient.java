@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 public class EchoClient {
 	private static final String SERVER_IP = "192.168.0.8";
+	
 	public static void main(String[] args) {
 		Scanner scanner = null; 
 		Socket socket = null;
