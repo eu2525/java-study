@@ -38,7 +38,7 @@ private static final String SERVER_IP = "127.0.0.1";
 		    pw.flush();
 		
 			// ChatClientReceiveThread 시작
-			ChatClientThread chatClientThread = new ChatClientThread(socket, br);
+			ChatClientThread chatClientThread = new ChatClientThread(br);
 			chatClientThread.start();
 			
 		    // 키보드 입력 처리

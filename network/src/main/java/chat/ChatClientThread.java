@@ -7,11 +7,10 @@ import java.net.Socket;
 import java.util.List;
 
 public class ChatClientThread extends Thread {
-	private Socket socket;
+
 	private BufferedReader bufferedReader;
 
-	public ChatClientThread(Socket socket, BufferedReader bufferedReader) {
-		this.socket = socket;
+	public ChatClientThread(BufferedReader bufferedReader) {
 		this.bufferedReader = bufferedReader; 
 	}
 	
