@@ -6,18 +6,37 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 public class TCPClinet {
 
 	public static void main(String[] args) {
 		Socket socket = null;
 		
-		// 1. 소켓 생성
-		socket = new Socket();
-		
 		try {
+			// 1. 소켓 생성
+			socket = new Socket();
+			
+			// 1-1. 소켓 버퍼 사이즈 확인
+			int rcvBufferSize = socket.getReceiveBufferSize();
+			int sndBufferSize = socket.getSendBufferSize();
+			System.out.println(rcvBufferSize + ":" + sndBufferSize);
+			
+			// 1-2. 소켓 버퍼 사이즈 변경
+			socket.setReceiveBufferSize(1024 * 10);
+			socket.setSendBufferSize(1024 * 10);
+			rcvBufferSize = socket.getReceiveBufferSize();
+			sndBufferSize = socket.getSendBufferSize();
+			System.out.println(rcvBufferSize + ":" + sndBufferSize);			
+			
+			// 1-3. SO_NODELAY(네이글 알고리즘 OFF)
+			socket.setTcpNoDelay(true);
+			
+			// 1-4. SO_TIMEOUT
+			socket.setSoTimeout(3000);
+			
 			// 2. 서버 연결
-			socket.connect(new InetSocketAddress("192.168.0.8",54542));
+			socket.connect(new InetSocketAddress("127.0.0.1",54542));
 
 			// 3. IO Stream 받아오기 
 			InputStream is = socket.getInputStream();
@@ -29,7 +48,7 @@ public class TCPClinet {
 			
 			// 5. 읽기 
 			byte[] buffer = new byte[256];
-			int readByteCount = is.read(buffer);
+			int readByteCount = is.read(buffer); // Timeout에 대한건 read 이 부분에서 적용됨..
 			if (readByteCount == -1) {
 				System.out.println("[client] closed by server");
 				return ;
@@ -37,6 +56,8 @@ public class TCPClinet {
 			
 			data = new String(buffer , 0, readByteCount, "utf-8");
 			System.out.println("[clinet] received :" + data);
+		} catch(SocketTimeoutException e) {
+			System.out.println("[client] Timeout");
 		} catch(SocketException e){ 
 			System.out.println("[clinet] socket exception");
 		} catch (IOException e) {

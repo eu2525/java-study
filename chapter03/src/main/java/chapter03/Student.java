@@ -6,4 +6,13 @@ public class Student extends Person {
 		// super();
 		System.out.println("Student() called");
 	}
+	
+	public void bark() {
+		System.out.println("학생이");
+	}
+	
+	public void aaa() {
+		System.out.println("aaa");
+	}
+	
 }
