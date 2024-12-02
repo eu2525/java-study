@@ -14,7 +14,7 @@ import java.util.Scanner;
 import echo.EchoServer;
 
 public class ChatClient {
-private static final String SERVER_IP = "192.168.0.8";
+private static final String SERVER_IP = "127.0.0.1";
 	
 	public static void main(String[] args) {
 		Scanner scanner = null; 
@@ -77,7 +77,6 @@ private static final String SERVER_IP = "192.168.0.8";
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
 	}
 	

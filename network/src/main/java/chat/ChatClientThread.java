@@ -22,7 +22,7 @@ public class ChatClientThread extends Thread {
 			while(true) {
 				String request = bufferedReader.readLine();
 				
-				if (request.equals("quit ok")) {
+				if ("quit ok".equals(request)) {
 					ChatClient.log("closed by client");
 					break;
 				}
@@ -31,7 +31,6 @@ public class ChatClientThread extends Thread {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	
-	}
+		}
+	} 
 }
-	
