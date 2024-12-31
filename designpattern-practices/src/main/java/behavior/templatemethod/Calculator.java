@@ -8,17 +8,16 @@ public class Calculator {
 		System.out.print("(val1, val2) > ");
 		int val1 = scanner.nextInt();
 		int val2 = scanner.nextInt();
-		// 구체적인 구현을 자식에서 진행!
 		int result = val1 + val2;
 		
-		System.out.println(result);
-		
-	}	public void subtract() {
+		System.out.println(result);	
+	}	
+	
+	public void subtract() {
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("(val1, val2) > ");
 		int val1 = scanner.nextInt();
 		int val2 = scanner.nextInt();
-		// 구체적인 구현을 자식에서 진행!
 		int result = val1 - val2;
 		
 		System.out.println(result);
